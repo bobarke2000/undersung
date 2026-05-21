@@ -1,0 +1,24 @@
+{
+  "name": "undersung",
+  "version": "1.0.0",
+  "description": "Find under-sung Spotify songs that Spotify doesn't recommend",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "weekly": "node weekly.js"
+  },
+  "keywords": ["spotify", "music", "discovery", "recommendation", "under-sung"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
