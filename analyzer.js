@@ -193,12 +193,12 @@ class UnderSungAnalyzer {
 
   // Query Listenbrainz lb-radio/tags for recordings in a popularity percentile
   // band within a genre. Results are randomised each call — no API key needed.
-  static async lbzGenreTracks(genre, count = 10, popBegin = 5, popEnd = 40) {
+  static async lbzGenreTracks(genre, count = 10, popBegin = 20, popEnd = 50) {
     const url = `https://api.listenbrainz.org/1/lb-radio/tags` +
       `?tag=${encodeURIComponent(genre)}&mode=easy&count=${count}` +
       `&pop_begin=${popBegin}&pop_end=${popEnd}`;
     try {
-      const res = await fetch(url, { headers: { 'User-Agent': 'UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})' } });
+      const res = await fetch(url, { headers: { 'User-Agent': `UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})` } });
       if (!res.ok) return [];
       const data = await res.json();
       return Array.isArray(data) ? data : [];
@@ -209,7 +209,7 @@ class UnderSungAnalyzer {
   // Chunked to 50 per request to stay within URL length limits.
   static async resolveLbzMetadata(mbids) {
     if (!mbids.length) return {};
-    const UA      = 'UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})';
+    const UA      = `UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})`;
     const CHUNK   = 50;
     const result  = {};
     for (let i = 0; i < mbids.length; i += CHUNK) {

@@ -9,7 +9,7 @@ A Spotify playlist generator that fights popularity bias. Spotify's algorithm lo
 1. Reads your Spotify listening history across three time ranges (short, medium, long term)
 2. Looks up each of your top 30 artists on MusicBrainz to build a weighted genre fingerprint — artists consistent across multiple time ranges score higher
 3. Walks outward through a hand-curated genre adjacency graph: core genres → adjacent → two-step → three-step
-4. Queries Listenbrainz `lb-radio/tags` for each genre with a popularity percentile band of 5–40% — real enough that people listen to it, obscure enough that Spotify won't recommend it
+4. Queries Listenbrainz `lb-radio/tags` for each genre with a popularity percentile band of 20–50% — real enough that people listen to it, obscure enough that Spotify won't recommend it
 5. Resolves Listenbrainz recordings to Spotify tracks via artist+title search
 6. Scores tracks by album type (deep cuts score higher than singles) and selects a final 50 with era diversity and one-artist-per-slot constraints
 7. Writes the playlist to your Spotify account

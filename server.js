@@ -42,7 +42,7 @@ async function getArtistGenres(artistName) {
     const query = encodeURIComponent(`artist:"${artistName}"`);
     const res = await fetch(
       `https://musicbrainz.org/ws/2/artist?query=${query}&limit=1&fmt=json`,
-      { headers: { 'User-Agent': 'UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})' } }
+      { headers: { 'User-Agent': `UnderSung/1.0 (${process.env.CONTACT_EMAIL || 'undersung-user'})` } }
     );
     if (!res.ok) return [];
     const data = await res.json();

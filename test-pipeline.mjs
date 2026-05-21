@@ -55,7 +55,7 @@ const tierLabel = f =>
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
 // ── Step 1: LBZ ──────────────────────────────────────────────────────────────
-console.log(`\n── Step 1: LBZ (count=10, pop 5–40%) ───────────────────────────────────────`);
+console.log(`\n── Step 1: LBZ (count=10, pop 20–60%) ──────────────────────────────────────`);
 const lbzResults = await Promise.all(
   GENRE_TIERS.map(({ genre }) => UnderSungAnalyzer.lbzGenreTracks(genre, 10))
 );

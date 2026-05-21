@@ -8,7 +8,7 @@ A Spotify playlist generator that fights popularity bias. Spotify's algorithm lo
 2. Weighting genres by how consistently an artist appears across time ranges (SML=3×, 2-range=2×, 1-range=1×)
 3. Adding "bonus" genres for multi-range artists whose primary genre is otherwise drowned out by frequency (e.g. gypsy jazz from Django Reinhardt)
 4. Walking outward through a genre adjacency graph (1-step → 2-step → 3-step from the user's taste)
-5. Querying Listenbrainz `lb-radio/tags` per genre with a popularity percentile band (5–40%) so results are undersung-but-real — not hits, not obscure junk
+5. Querying Listenbrainz `lb-radio/tags` per genre with a popularity percentile band (20–50%) so results are undersung-but-real — not hits, not obscure junk
 6. Resolving Listenbrainz recording MBIDs → artist+title via the LBZ metadata API, then searching Spotify for playable URIs
 7. Scoring tracks for "undersung-ness" based on album type (single vs. full album)
 8. Selecting the final 50 with era diversity + one-artist-per-slot constraints
@@ -18,22 +18,20 @@ A Spotify playlist generator that fights popularity bias. Spotify's algorithm lo
 
 | File | Role |
 |------|------|
-| `server.js` | Express backend — OAuth flow, `/api/analyze`, `/api/create-playlist` |
-| `analyzer.js` | Core logic — genre graph, scoring, quota selection, era diversity |
+| `server.js` | Express backend — OAuth flow, `/api/analyze` (SSE), `/api/create-playlist` |
+| `analyzer.js` | Core logic — genre graph, LBZ queries, scoring, quota selection, era diversity |
 | `spotifyClient.js` | Thin Spotify API wrapper (axios-based, auto-refreshes tokens) |
-| `index.html` | Frontend UI — ATLAS v1.04, dark space aesthetic, JetBrains Mono, Three.js |
+| `index.html` | Frontend — Three.js star chart, live discovery feed, playlist UI |
 | `weekly.js` | Headless weekly runner — reads `.token`, creates playlist, logs tracklist |
-| `Undersung.standalone.html` | Self-contained single-file bundle for sharing/distribution |
-| `~SHIP/index.html` | Release copy of the standalone bundle |
 | `.token` | Persisted refresh token (written on first OAuth login, gitignored) |
 | `.history.json` | Ring buffer (500 entries) of previously surfaced track IDs — penalized on re-runs |
 
 ## Architecture notes
 
 - **No audio features.** Spotify deprecated `GET /audio-features` for new apps. Scoring uses `album_type` and `total_tracks` from search results; quality filtering is handled upstream by Listenbrainz percentile band.
-- **Discovery via Listenbrainz.** `UnderSungAnalyzer.lbzGenreTracks()` queries `api.listenbrainz.org/1/lb-radio/tags` with `pop_begin=5&pop_end=40`. No API key required. Results randomise each call. `resolveLbzMetadata()` batch-resolves MBIDs to artist+title (chunks of 50). `resolveSpotifyTrack()` searches Spotify by artist+title with 4 progressively looser query formats.
-- **Genre data via MusicBrainz.** `getArtistGenres()` hits `musicbrainz.org/ws/2/artist` with `User-Agent: UnderSung/1.0 (bobarke@gmail.com)`. Rate-limit: sequential with 50ms gaps.
-- **Spotify URI resolution** is sequential with a 1000ms gap between calls — fast enough to avoid 502s, slow enough not to trigger rate limits. ~200 candidates ≈ ~3 minutes for the weekly runner (acceptable for a headless job).
+- **Discovery via Listenbrainz.** `UnderSungAnalyzer.lbzGenreTracks()` queries `api.listenbrainz.org/1/lb-radio/tags` with `pop_begin=20&pop_end=50`. No API key required. Results randomise each call. `resolveLbzMetadata()` batch-resolves MBIDs to artist+title (chunks of 50). `resolveSpotifyTrack()` searches Spotify by artist+title with 4 progressively looser query formats.
+- **Genre data via MusicBrainz.** `getArtistGenres()` hits `musicbrainz.org/ws/2/artist` with `User-Agent: UnderSung/1.0 ($CONTACT_EMAIL)`. Rate-limit: sequential with 50ms gaps.
+- **Spotify URI resolution** is sequential with 1500ms between tracks and 300ms between query format attempts. 120 candidates ≈ ~3–4 minutes. Retry-after ≤300s is handled automatically; longer bans surface as an error.
 - **Sessions are in-memory** (`Map`). Fine for single-user local use; not production-safe.
 - **ESM throughout** (`"type": "module"` in package.json). Use `import`/`export`, not `require`.
 
