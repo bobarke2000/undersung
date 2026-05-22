@@ -78,15 +78,15 @@ Final 50 are selected with `randomQuotas()` (±4 jitter per tier) and `selectWit
 ```
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
-SPOTIFY_REDIRECT_URI=http://localhost:3000/callback
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:3000/callback
 ```
 
-Redirect URI must be registered in the Spotify Developer Dashboard.
+Redirect URI must be registered in the Spotify Developer Dashboard. Spotify's current policy does not permit `localhost` — use the explicit loopback address `http://127.0.0.1:3000/callback`.
 
 ## Run
 
 ```bash
-npm start          # web server at localhost:3000
+npm start          # web server at http://127.0.0.1:3000
 npm run dev        # same with --watch
 npm run weekly     # headless weekly playlist (needs .token)
 ```

@@ -24,7 +24,7 @@ Discovery is genre-relative: a 30th-percentile track in jazz is different from 3
 
 1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
 2. Create an app (any name)
-3. In the app settings, add both `http://localhost:3000/callback` and `http://127.0.0.1:3000/callback` as Redirect URIs (Spotify allows multiple)
+3. In the app settings, add `http://127.0.0.1:3000/callback` as a Redirect URI (`localhost` is not permitted by Spotify's current policy)
 4. Copy your Client ID and Client Secret
 
 ### 2. Clone and install
@@ -46,13 +46,13 @@ Open `.env` and fill in the four values:
 ```
 SPOTIFY_CLIENT_ID=your_client_id
 SPOTIFY_CLIENT_SECRET=your_client_secret
-SPOTIFY_REDIRECT_URI=http://localhost:3000/callback
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:3000/callback
 CONTACT_EMAIL=your_email@example.com
 ```
 
 **SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET** — from your Spotify app dashboard (step 1).
 
-**SPOTIFY_REDIRECT_URI** — must match what you registered in the Spotify dashboard. The default `http://localhost:3000/callback` works on most systems. If the OAuth callback fails (known issue on Node 18+ where `localhost` resolves to IPv6), switch this to `http://127.0.0.1:3000/callback` and open that address in your browser instead.
+**SPOTIFY_REDIRECT_URI** — must match what you registered in the Spotify dashboard. Spotify's current policy does not permit `localhost` — use the explicit loopback address `http://127.0.0.1:3000/callback`.
 
 **CONTACT_EMAIL** — your email address. MusicBrainz requires a contact address in the API User-Agent for every app that queries their database — see their [rate limiting policy](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting). Without a real address, requests may be blocked. This value never leaves your machine; it only appears in HTTP request headers sent to MusicBrainz.
 
@@ -62,7 +62,7 @@ CONTACT_EMAIL=your_email@example.com
 npm start
 ```
 
-Open [localhost:3000](http://localhost:3000), authorize with Spotify, and wait ~3–4 minutes for the analysis to complete. The loading screen shows a live feed of tracks being discovered as they resolve.
+Open [127.0.0.1:3000](http://127.0.0.1:3000), authorize with Spotify, and wait ~3–4 minutes for the analysis to complete. The loading screen shows a live feed of tracks being discovered as they resolve.
 
 ---
 

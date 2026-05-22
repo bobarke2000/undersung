@@ -27,7 +27,7 @@ app.use(express.static(__dirname));
 const spotify = new SpotifyClient(
   process.env.SPOTIFY_CLIENT_ID,
   process.env.SPOTIFY_CLIENT_SECRET,
-  process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000/callback'
+  process.env.SPOTIFY_REDIRECT_URI || 'http://127.0.0.1:3000/callback'
 );
 
 const analyzer = new UnderSungAnalyzer();
