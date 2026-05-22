@@ -24,7 +24,7 @@ Discovery is genre-relative: a 30th-percentile track in jazz is different from 3
 
 1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
 2. Create an app (any name)
-3. In the app settings, add `http://localhost:3000/callback` as a Redirect URI
+3. In the app settings, add both `http://localhost:3000/callback` and `http://127.0.0.1:3000/callback` as Redirect URIs (Spotify allows multiple)
 4. Copy your Client ID and Client Secret
 
 ### 2. Clone and install
@@ -52,7 +52,7 @@ CONTACT_EMAIL=your_email@example.com
 
 **SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET** — from your Spotify app dashboard (step 1).
 
-**SPOTIFY_REDIRECT_URI** — leave this exactly as `http://localhost:3000/callback`. It must match what you entered in the Spotify dashboard.
+**SPOTIFY_REDIRECT_URI** — must match what you registered in the Spotify dashboard. The default `http://localhost:3000/callback` works on most systems. If the OAuth callback fails (known issue on Node 18+ where `localhost` resolves to IPv6), switch this to `http://127.0.0.1:3000/callback` and open that address in your browser instead.
 
 **CONTACT_EMAIL** — your email address. MusicBrainz requires a contact address in the API User-Agent for every app that queries their database — see their [rate limiting policy](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting). Without a real address, requests may be blocked. This value never leaves your machine; it only appears in HTTP request headers sent to MusicBrainz.
 
